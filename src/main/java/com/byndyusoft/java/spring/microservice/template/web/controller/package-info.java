@@ -1,5 +1,6 @@
 /**
  * A place for {@link org.springframework.stereotype.Controller}
+ * or {@link org.springframework.web.bind.annotation.RestController}
  *
  * <p/>Class naming convention: {ClassName}Controller
  */

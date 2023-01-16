@@ -1,0 +1,19 @@
+spring:
+  liquibase:
+    enabled: false
+
+placement:
+  consumers:
+    enabled: false
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    url: /v3/api-docs.yml
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    com.adeo: DEBUG
