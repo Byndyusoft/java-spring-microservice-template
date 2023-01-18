@@ -19,8 +19,8 @@ public class AddressController {
   private final AddressService addressService;
 
   @GetMapping("/addresses/{addressId}")
-  public ResponseEntity<Address> getById(@PathVariable final String addressId) {
-    return ResponseEntity.ok(addressService.getById(addressId));
+  public ResponseEntity<Address> get(@PathVariable final String addressId) {
+    return ResponseEntity.ok(addressService.get(addressId));
   }
 
   @PostMapping("/addresses")
