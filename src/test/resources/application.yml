@@ -1,0 +1,28 @@
+moduleName: byndyusoft.java
+
+spring:
+  application:
+    name: java-spring-microservice-template
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        types:
+          print:
+            banner: false
+  liquibase:
+    change-log: classpath:liquibase/db.changelog-master.xml
+  datasource:
+    hikari:
+      maximum-pool-size: 2
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:postgresql:13.7://10.9.68.118:11297/template
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
