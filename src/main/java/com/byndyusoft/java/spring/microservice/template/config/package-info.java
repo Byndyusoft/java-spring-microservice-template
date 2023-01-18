@@ -1,5 +1,5 @@
 /**
- * Place for bean configuration {@link org.springframework.context.annotation.Configuration}
+ * Place for bean configuration {@link org.springframework.context.annotation.Configuration}.
  *
  */
 
