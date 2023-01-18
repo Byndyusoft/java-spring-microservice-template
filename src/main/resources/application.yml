@@ -1,5 +1,5 @@
 build.version: @project.version@
-wmsModuleName: @moduleName@
+moduleName: @moduleName@
 
 server:
   port: ${PORT:10000}
@@ -9,12 +9,6 @@ spring:
     allow-bean-definition-overriding: true
   application:
     name: @project.name@
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
-  cache:
-    type: none
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -38,85 +32,6 @@ spring:
   sleuth:
     sampler:
       probability: 1.0
-  cloud:
-    function:
-      definition: createPlacementTaskConsumer;stockAtLabeledAddressConsumer;createReplenishmentTaskConsumer;createMovementTaskConsumer;createSortingTaskConsumer
-    stream:
-      default:
-        consumer:
-          maxAttempts: ${KAFKA_CONSUMER_MAX_ATTEMPTS:5}
-          backOffInitialInterval: ${KAFKA_CONSUMER_BACKOFF_INITIAL_INTERVAL:2000}
-          backOffMaxInterval: ${KAFKA_CONSUMER_BACKOFF_MAX_INTERVAL:10000}
-          backOffMultiplier: ${KAFKA_CONSUMER_BACKOFF_MULTIPLIER:1.0}
-          retryableExceptions:
-            javax.validation.ConstraintViolationException: false
-            java.lang.ClassCastException: false
-            java.lang.IllegalArgumentException: false
-      bindings:
-        createPlacementTaskConsumer-in-0:
-          destination: ${KAFKA_TOPIC_PLACEMENT_TASK_CREATE:placement-task-create}
-          group: ${KAFKA_GROUP_PLACEMENT_TASK:group_placement_task}
-        stockAtLabeledAddressConsumer-in-0:
-          destination: ${KAFKA_TOPIC_LINE_SUGGESTED_ADDRESSES:line-suggested-addresses}
-          group: ${KAFKA_GROUP_SUGGESTED_ADDRESSES:group_suggested_addresses}
-        lineChangesProducer-out-0:
-          destination: ${KAFKA_TOPIC_LINE_CHANGES:line-changes}
-        taskChangesProducer-out-0:
-          destination: ${KAFKA_TOPIC_TASK_CHANGES:task-changes}
-        createReplenishmentTaskConsumer-in-0:
-          destination: ${KAFKA_TOPIC_REPLENISHMENT_TASK_CREATE:replenishment-task-create}
-          group: ${KAFKA_GROUP_REPLENISHMENT_TASK:group_replenishement_task}
-        createMovementTaskConsumer-in-0:
-          destination: ${KAFKA_TOPIC_MOVEMENT_TASK_CREATE:movement-task-create}
-          group: ${KAFKA_GROUP_MOVEMENT_TASK:group_movement_task}
-        createSortingTaskConsumer-in-0:
-          destination: ${KAFKA_TOPIC_SORTING_TASK_CREATE:sorting-task-create}
-          group: ${KAFKA_GROUP_SORTING_TASK:group_sorting_task}
-      kafka:
-        binder:
-          transaction:
-            producer:
-              auto-startup: ${KAFKA_PRODUCER_AUTO_STARTUP:false}
-              configuration:
-                enable.idempotence: true
-                acks: all
-            transaction-id-prefix: tx-${random.uuid}-
-          consumer-properties:
-            max.poll.records: ${KAFKA_CONSUMER_MAX_POLL_RECORDS:1}
-            max.partition.fetch.bytes: ${KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES:1048576}
-            fetch.max.bytes: ${KAFKA_CONSUMER_FETCH_MAX_BYTES:52428800}
-        default:
-          consumer:
-            enableDlq: ${KAFKA_CONSUMER_ENABLE_DLQ:true}
-        bindings:
-          createPlacementTaskConsumer-in-0:
-            consumer:
-              dlqName: ${KAFKA_TOPIC_PLACEMENT_TASK_CREATE_DLQ:placement-task-create-dlq}
-          stockAtLabeledAddressConsumer-in-0:
-            consumer:
-              dlqName: ${KAFKA_TOPIC_LINE_SUGGESTED_ADDRESSES_DLQ:line-suggested-addresses-dlq}
-          createReplenishmentTaskConsumer-in-0:
-            consumer:
-              dlqName: ${KAFKA_TOPIC_REPLENISHMENT_TASK_CREATE_DLQ:replenishment-task-create-dlq}
-          createMovementTaskConsumer-in-0:
-            consumer:
-              dlqName: ${KAFKA_TOPIC_MOVEMENT_TASK_CREATE_DLQ:movement-task-create-dlq}
-          createSortingTaskConsumer-in-0:
-            consumer:
-              dlqName: ${KAFKA_TOPIC_SORTING_TASK_CREATE_DLQ:sorting-task-create-dlq}
-
-  kafka:
-    bootstrap-servers: ${KAFKA_ADDRESSES}
-    properties:
-      security.protocol: SASL_SSL
-      sasl.mechanism: SCRAM-SHA-512
-      sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="${KAFKA_USERNAME}" password="${KAFKA_PASSWORD}";
-
-#springdoc:
-#  api-docs:
-#    enabled: false
-#  swagger-ui:
-#    url: /v3/api-docs.yml
 
 management:
   endpoint:
@@ -162,69 +77,5 @@ logging:
   level:
     ROOT: INFO
     org.zalando.logbook.Logbook: TRACE
-    sql: debug
-    org.hibernate: info
-    org.hibernate.SQL: debug
   pattern:
-    console: "${wmsModuleName}_${spring.application.name} %clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr([-,%X{traceId:-},%X{spanId:-}]){blue}[%thread] %clr(%-5level) %clr(%logger{36}){magenta} - %msg%n"
-
-clients:
-  parameters:
-    system-id: stock
-  settings:
-    thread-pool-task-executor:
-      thread-name-prefix: ExternalCallTaskExecutor-
-      core-pool-size: 2
-      max-pool-size: 4
-      queue-capacity: 500
-    transaction:
-      root-uri: http://localhost:10000
-      connection-timeout: 5s
-      read-timeout: 10s
-      connection-manager:
-        default-max-per-route: 50
-        max-total: 50
-    topology:
-      root-uri: http://localhost:10001
-      connection-timeout: 5s
-      read-timeout: 10s
-      connection-manager:
-        default-max-per-route: 50
-        max-total: 50
-    master-data:
-      root-uri: http://localhost:10002
-      connection-timeout: 5s
-      read-timeout: 10s
-      connection-manager:
-        default-max-per-route: 50
-        max-total: 50
-    data-exposer:
-      root-uri: http://localhost:10003
-      connection-timeout: 5s
-      read-timeout: 10s
-      connection-manager:
-        default-max-per-route: 50
-        max-total: 50
-  compensate:
-    max-attempts: 5
-    retry-time-interval: 3s
-    thread-pool-task-executor:
-      thread-name-prefix: CompensateCallTaskExecutor-
-      core-pool-size: 2
-      max-pool-size: 4
-      queue-capacity: 500
-
-placement:
-  producers:
-    enabled: true
-  consumers:
-    enabled: true
-    parameters:
-      replenishment-task-create-system-id: stock
-      replenishment-task-create-user-id: auto_replenishment
-      movement-task-create-system-id: stock
-      movement-task-create-user-id: auto_movement
-      placement-task-create-system-id: stock
-      placement-task-create-user-id: auto_placement
-wms:
-  get-location-from-master-data: false
+    console: "${moduleName}_${spring.application.name} %clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr([-,%X{traceId:-},%X{spanId:-}]){blue}[%thread] %clr(%-5level) %clr(%logger{36}){magenta} - %msg%n"
