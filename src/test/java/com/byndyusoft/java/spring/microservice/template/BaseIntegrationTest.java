@@ -76,7 +76,7 @@ public abstract class BaseIntegrationTest {
         ).andExpect(
             status().is(expectedStatus.value())
         ).andExpect(
-            content().json(expectedResponse)
+            content().json(expectedResponse, true)
         );
   }
 }

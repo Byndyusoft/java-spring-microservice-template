@@ -606,107 +606,106 @@
                 </executions>
             </plugin>
 
-            <!--  TODO Uncomment if you need generation db -->
             <!--generate database schema in svg format-->
-            <!--            <plugin>-->
-            <!--                <groupId>org.codehaus.gmaven</groupId>-->
-            <!--                <artifactId>groovy-maven-plugin</artifactId>-->
-            <!--                <version>2.1.1</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>generate-db-schema</id>-->
-            <!--                        <phase>prepare-package</phase>-->
-            <!--                        <goals>-->
-            <!--                            <goal>execute</goal>-->
-            <!--                        </goals>-->
-            <!--                        <configuration>-->
-            <!--                            <source>-->
-            <!--                                import org.testcontainers.containers.PostgreSQLContainer-->
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>groovy-maven-plugin</artifactId>
+                <version>2.1.1</version>
+                <executions>
+                    <execution>
+                        <id>generate-db-schema</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>
+                                import org.testcontainers.containers.PostgreSQLContainer
 
-            <!--                                db = new PostgreSQLContainer("postgres:13.7")-->
-            <!--                                db.start() //container will be stopped automatically by ryuk-->
-            <!--                                project.properties.setProperty('testcontainers.db.url', db.getJdbcUrl())-->
-            <!--                                project.properties.setProperty('testcontainers.db.username', db.getUsername())-->
-            <!--                                project.properties.setProperty('testcontainers.db.password', db.getPassword())-->
-            <!--                            </source>-->
-            <!--                        </configuration>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--                <dependencies>-->
-            <!--                    <dependency>-->
-            <!--                        <groupId>org.testcontainers</groupId>-->
-            <!--                        <artifactId>postgresql</artifactId>-->
-            <!--                        <version>1.15.2</version>-->
-            <!--                    </dependency>-->
-            <!--                </dependencies>-->
-            <!--            </plugin>-->
-            <!--            <plugin>-->
-            <!--                <groupId>org.liquibase</groupId>-->
-            <!--                <artifactId>liquibase-maven-plugin</artifactId>-->
-            <!--                <version>3.4.1</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>generate-db-schema</id>-->
-            <!--                        <phase>prepare-package</phase>-->
-            <!--                        <goals>-->
-            <!--                            <goal>update</goal>-->
-            <!--                        </goals>-->
-            <!--                        <configuration>-->
-            <!--                            <changeLogFile>${basedir}/src/main/resources/liquibase/db.changelog-master.xml-->
-            <!--                            </changeLogFile>-->
-            <!--                            <driver>org.postgresql.Driver</driver>-->
-            <!--                            <url>${testcontainers.db.url}</url>-->
-            <!--                            <username>${testcontainers.db.username}</username>-->
-            <!--                            <password>${testcontainers.db.password}</password>-->
-            <!--                            <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>-->
-            <!--                            <logging>off</logging>-->
-            <!--                        </configuration>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
-            <!--            <plugin>-->
-            <!--                <groupId>us.fatehi</groupId>-->
-            <!--                <artifactId>schemacrawler-maven-plugin</artifactId>-->
-            <!--                <version>16.15.11.1</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>generate-db-schema</id>-->
-            <!--                        <phase>prepare-package</phase>-->
-            <!--                        <goals>-->
-            <!--                            <goal>schemacrawler</goal>-->
-            <!--                        </goals>-->
-            <!--                        <configuration>-->
-            <!--                            <command>schema</command>-->
-            <!--                            <url>${testcontainers.db.url}</url>-->
-            <!--                            <user>${testcontainers.db.username}</user>-->
-            <!--                            <password>${testcontainers.db.password}</password>-->
-            <!--                            <outputDirectory>.</outputDirectory>-->
-            <!--                            <outputfile>db-schema.svg</outputfile>-->
-            <!--                            <outputformat>svg</outputformat>-->
-            <!--                            <noinfo>true</noinfo>-->
-            <!--                            <tables>^(?!.*(databasechangelog|txno_outbox|txno_version)).*$</tables>-->
-            <!--                            <loglevel>OFF</loglevel>-->
-            <!--                        </configuration>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--                <dependencies>-->
-            <!--                    <dependency>-->
-            <!--                        <groupId>guru.nidi</groupId>-->
-            <!--                        <artifactId>graphviz-java</artifactId>-->
-            <!--                        <version>0.18.1</version>-->
-            <!--                    </dependency>-->
-            <!--                    <dependency>-->
-            <!--                        <groupId>us.fatehi</groupId>-->
-            <!--                        <artifactId>schemacrawler-postgresql</artifactId>-->
-            <!--                        <version>16.15.11</version>-->
-            <!--                    </dependency>-->
-            <!--                    <dependency>-->
-            <!--                        <groupId>org.graalvm.js</groupId>-->
-            <!--                        <artifactId>js</artifactId>-->
-            <!--                        <version>21.2.0</version>-->
-            <!--                    </dependency>-->
-            <!--                </dependencies>-->
-            <!--            </plugin>-->
+                                db = new PostgreSQLContainer("postgres:13.7")
+                                db.start() //container will be stopped automatically by ryuk
+                                project.properties.setProperty('testcontainers.db.url', db.getJdbcUrl())
+                                project.properties.setProperty('testcontainers.db.username', db.getUsername())
+                                project.properties.setProperty('testcontainers.db.password', db.getPassword())
+                            </source>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.testcontainers</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>1.15.2</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <id>generate-db-schema</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>update</goal>
+                        </goals>
+                        <configuration>
+                            <changeLogFile>${basedir}/src/main/resources/liquibase/db.changelog-master.xml
+                            </changeLogFile>
+                            <driver>org.postgresql.Driver</driver>
+                            <url>${testcontainers.db.url}</url>
+                            <username>${testcontainers.db.username}</username>
+                            <password>${testcontainers.db.password}</password>
+                            <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+                            <logging>off</logging>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>us.fatehi</groupId>
+                <artifactId>schemacrawler-maven-plugin</artifactId>
+                <version>16.15.11.1</version>
+                <executions>
+                    <execution>
+                        <id>generate-db-schema</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>schemacrawler</goal>
+                        </goals>
+                        <configuration>
+                            <command>schema</command>
+                            <url>${testcontainers.db.url}</url>
+                            <user>${testcontainers.db.username}</user>
+                            <password>${testcontainers.db.password}</password>
+                            <outputDirectory>.</outputDirectory>
+                            <outputfile>db-schema.svg</outputfile>
+                            <outputformat>svg</outputformat>
+                            <noinfo>true</noinfo>
+                            <tables>^(?!.*(databasechangelog|txno_outbox|txno_version)).*$</tables>
+                            <loglevel>OFF</loglevel>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>guru.nidi</groupId>
+                        <artifactId>graphviz-java</artifactId>
+                        <version>0.18.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>us.fatehi</groupId>
+                        <artifactId>schemacrawler-postgresql</artifactId>
+                        <version>16.15.11</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.graalvm.js</groupId>
+                        <artifactId>js</artifactId>
+                        <version>21.2.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
 
         <resources>
