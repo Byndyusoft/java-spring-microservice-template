@@ -1,0 +1,81 @@
+build.version: @project.version@
+moduleName: @moduleName@
+
+server:
+  port: ${PORT:10000}
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: @project.name@
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        query:
+          fail_on_pagination_over_collection_fetch: true
+        types:
+          print:
+            banner: false
+    open-in-view: false
+  liquibase:
+    change-log: classpath:liquibase/db.changelog-master.xml
+  sleuth:
+    sampler:
+      probability: 1.0
+
+management:
+  endpoint:
+    metrics:
+      enabled: false
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      base-path: "/"
+      exposure:
+        include: "*"
+      path-mapping:
+        health: actuator/health
+        info: actuator/info
+        prometheus: metrics
+
+logbook:
+  exclude:
+    - /actuator/health
+    - /v2/api-docs/**
+    - /v3/api-docs/**
+    - /v3/api-docs.yml
+    - /swagger-ui.html
+    - /admin/**
+    - /webjars/**
+    - /swagger-resources/**
+    - /swagger-ui/**
+    - /metrics
+  obfuscate:
+    headers:
+      - Authorization
+      - X-Secret
+    parameters:
+      - access_token
+      - password
+  format:
+    style: json
+  strategy: body-only-if-status-at-least
+  minimum-status: ${MINIMUM_STATUS_LOG_BODY:400}
+
+logging:
+  level:
+    ROOT: INFO
+    org.zalando.logbook.Logbook: TRACE
+  pattern:
+    console: "${moduleName}_${spring.application.name} %clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr([-,%X{traceId:-},%X{spanId:-}]){blue}[%thread] %clr(%-5level) %clr(%logger{36}){magenta} - %msg%n"

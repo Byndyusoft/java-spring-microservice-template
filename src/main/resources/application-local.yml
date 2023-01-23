@@ -1,0 +1,10 @@
+spring:
+  liquibase:
+    enabled: false
+
+logging:
+  level:
+    org.hibernate: info
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    sql: debug
